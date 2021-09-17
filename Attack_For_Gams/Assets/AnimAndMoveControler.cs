@@ -6,10 +6,13 @@ using UnityEngine.InputSystem;
 public class AnimAndMoveControler : MonoBehaviour
 {
     public float speedWalk;
+    float time;
+    float delay = 0.5f;
+    public bool isJump;
 
     PlayerInput PlayerInput;
-    public CharacterController Controller;
-    Animator animator;
+    CharacterController Controller;
+    public Animator animator;
 
     Vector2 currentMovementInput;
     Vector3 currentMovement;
@@ -19,11 +22,19 @@ public class AnimAndMoveControler : MonoBehaviour
     {
         PlayerInput = new PlayerInput();
         Controller = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
 
         PlayerInput.characterControler.move.started += onMovementInput;
         PlayerInput.characterControler.move.canceled += onMovementInput;
         PlayerInput.characterControler.move.performed += onMovementInput;
+
+        PlayerInput.characterControler.jump.performed += ctx => Jump(true);
+        PlayerInput.characterControler.jump.performed += ctx => Jump(true);
+    }
+    void Jump(bool jump)
+    {
+        animator.SetBool("Jump", jump);
+        time = 0;
     }
     void handleRotation()
     {
@@ -66,8 +77,15 @@ public class AnimAndMoveControler : MonoBehaviour
     {
         handleAnimation();
         handleRotation();
-
-        Controller.Move(currentMovement * Time.deltaTime);
+        if (!isJump)
+        {
+            Controller.Move(currentMovement * Time.deltaTime);
+        }
+        time += Time.deltaTime;
+        if (time>delay)
+        {
+            Jump(false);
+        }
     }
     private void OnEnable()
     {

@@ -27,18 +27,10 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""LookX"",
-                    ""type"": ""Value"",
-                    ""id"": ""fc450994-891f-4506-9c53-ec3a1c3109d2"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": ""NormalizeVector2"",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""LookY"",
-                    ""type"": ""Value"",
-                    ""id"": ""957c5856-6f57-482b-854e-aafedfaeec46"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""name"": ""jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""5821fb78-df6b-49f1-ad36-e21d727b2424"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": ""NormalizeVector2"",
                     ""interactions"": """"
                 }
@@ -47,7 +39,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""79a7f8b9-fdfe-4efd-be21-d0b30b57f775"",
-                    ""path"": ""<Gamepad>/rightStick"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -112,45 +104,23 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7015f452-3981-4f20-b491-6872eca175b7"",
-                    ""path"": ""<Mouse>/delta/x"",
+                    ""id"": ""a65443cf-a15a-4e1f-b458-e0fd6f7240a9"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""LookX"",
+                    ""action"": ""jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""55572d80-d0cb-4cdf-bede-50683179c430"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""id"": ""3395055f-a87b-46af-9696-2eeb0bf47054"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""LookX"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e8b2173f-6445-44ed-bb30-18881313c049"",
-                    ""path"": ""<Gamepad>/leftStick/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LookY"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e7de7678-75f0-4ece-bac9-6d10b0577783"",
-                    ""path"": ""<Mouse>/position/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""LookY"",
+                    ""action"": ""jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -162,8 +132,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         // characterControler
         m_characterControler = asset.FindActionMap("characterControler", throwIfNotFound: true);
         m_characterControler_move = m_characterControler.FindAction("move", throwIfNotFound: true);
-        m_characterControler_LookX = m_characterControler.FindAction("LookX", throwIfNotFound: true);
-        m_characterControler_LookY = m_characterControler.FindAction("LookY", throwIfNotFound: true);
+        m_characterControler_jump = m_characterControler.FindAction("jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -214,15 +183,13 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputActionMap m_characterControler;
     private ICharacterControlerActions m_CharacterControlerActionsCallbackInterface;
     private readonly InputAction m_characterControler_move;
-    private readonly InputAction m_characterControler_LookX;
-    private readonly InputAction m_characterControler_LookY;
+    private readonly InputAction m_characterControler_jump;
     public struct CharacterControlerActions
     {
         private @PlayerInput m_Wrapper;
         public CharacterControlerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @move => m_Wrapper.m_characterControler_move;
-        public InputAction @LookX => m_Wrapper.m_characterControler_LookX;
-        public InputAction @LookY => m_Wrapper.m_characterControler_LookY;
+        public InputAction @jump => m_Wrapper.m_characterControler_jump;
         public InputActionMap Get() { return m_Wrapper.m_characterControler; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -235,12 +202,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @move.started -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnMove;
                 @move.performed -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnMove;
                 @move.canceled -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnMove;
-                @LookX.started -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnLookX;
-                @LookX.performed -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnLookX;
-                @LookX.canceled -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnLookX;
-                @LookY.started -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnLookY;
-                @LookY.performed -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnLookY;
-                @LookY.canceled -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnLookY;
+                @jump.started -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnJump;
+                @jump.performed -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnJump;
+                @jump.canceled -= m_Wrapper.m_CharacterControlerActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_CharacterControlerActionsCallbackInterface = instance;
             if (instance != null)
@@ -248,12 +212,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @move.started += instance.OnMove;
                 @move.performed += instance.OnMove;
                 @move.canceled += instance.OnMove;
-                @LookX.started += instance.OnLookX;
-                @LookX.performed += instance.OnLookX;
-                @LookX.canceled += instance.OnLookX;
-                @LookY.started += instance.OnLookY;
-                @LookY.performed += instance.OnLookY;
-                @LookY.canceled += instance.OnLookY;
+                @jump.started += instance.OnJump;
+                @jump.performed += instance.OnJump;
+                @jump.canceled += instance.OnJump;
             }
         }
     }
@@ -261,7 +222,6 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     public interface ICharacterControlerActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnLookX(InputAction.CallbackContext context);
-        void OnLookY(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }
