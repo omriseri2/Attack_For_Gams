@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 
 public class AnimAndMoveControler : MonoBehaviour
 {
+    public GameObject body;
     public float speedWalk;
-    float time;
-    float delay = 0.5f;
     public bool isJump;
+
+    public jump Jump;
 
     PlayerInput PlayerInput;
     CharacterController Controller;
@@ -28,13 +29,11 @@ public class AnimAndMoveControler : MonoBehaviour
         PlayerInput.characterControler.move.canceled += onMovementInput;
         PlayerInput.characterControler.move.performed += onMovementInput;
 
-        PlayerInput.characterControler.jump.performed += ctx => Jump(true);
-        PlayerInput.characterControler.jump.performed += ctx => Jump(true);
+        PlayerInput.characterControler.jump.performed += ctx => jump();
     }
-    void Jump(bool jump)
+    void jump()
     {
-        animator.SetBool("Jump", jump);
-        time = 0;
+        Jump.j();
     }
     void handleRotation()
     {
@@ -49,7 +48,7 @@ public class AnimAndMoveControler : MonoBehaviour
         if (isMovementPressde)
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
-            transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime);
+            body.transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime);
         }
     }
     void onMovementInput(InputAction.CallbackContext context)
@@ -80,11 +79,6 @@ public class AnimAndMoveControler : MonoBehaviour
         if (!isJump)
         {
             Controller.Move(currentMovement * Time.deltaTime);
-        }
-        time += Time.deltaTime;
-        if (time>delay)
-        {
-            Jump(false);
         }
     }
     private void OnEnable()
